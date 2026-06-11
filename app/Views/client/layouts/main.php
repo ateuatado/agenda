@@ -513,6 +513,9 @@
 <nav class="site-nav">
     <a href="<?= base_url('/') ?>" class="brand">Studio MarcoSantoFoto</a>
     <div class="nav-links">
+        <?php if (auth()->loggedIn()): ?>
+            <a href="<?= base_url('admin/') ?>">Admin</a>
+        <?php endif; ?>
         <?php if (session()->has('customer_id')): ?>
             <a href="<?= route_to('client.my_bookings') ?>">Minha Agenda</a>
             <a href="<?= route_to('client.logout') ?>">Sair</a>

@@ -11,9 +11,10 @@
 
 <!-- All slots as JSON for JavaScript interactivity (no extra fetch needed) -->
 <script>
-const AGENDA_SLOTS = <?= json_encode($slots, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+const AGENDA_SLOTS     = <?= json_encode($slots, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 const BOOKING_BASE_URL = '<?= base_url('agendar') ?>';
 const INTEREST_BASE_URL = '<?= base_url('interesse') ?>';
+const CAN_BOOK = <?= $canBook ? 'true' : 'false' ?>;
 </script>
 
 <!-- Month Navigation -->
@@ -233,36 +234,40 @@ function renderDetailPanel(date, slots) {
 function renderSlotCard(slot) {
     const time     = slot.start_time.substring(0, 5);
     const duration = formatDuration(parseInt(slot.duration_minutes));
-    const color    = slot.color || '#6366f1';
     const isAvail  = slot.status === 'available';
 
-    if (isAvail) {
+    if (isAvail && CAN_BOOK) {
         return `
         <a href="${BOOKING_BASE_URL}/${slot.id}" class="slot-detail-card available">
-            <div class="sdc-color-bar" style="background:${color}"></div>
+            <div class="sdc-color-bar"></div>
             <div class="sdc-body">
                 <div class="sdc-time">${time}</div>
                 <div class="sdc-type">${escHtml(slot.session_type_name)}</div>
-                <div class="sdc-meta">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    ${duration}
-                </div>
+                <div class="sdc-meta">⏱ ${duration}</div>
+            </div>
+            <div class="sdc-action"><span class="sdc-btn-book">AGENDAR →</span></div>
+        </a>`;
+    } else if (isAvail && !CAN_BOOK) {
+        return `
+        <div class="slot-detail-card available" style="cursor:default">
+            <div class="sdc-color-bar"></div>
+            <div class="sdc-body">
+                <div class="sdc-time">${time}</div>
+                <div class="sdc-type">${escHtml(slot.session_type_name)}</div>
+                <div class="sdc-meta">⏱ ${duration}</div>
             </div>
             <div class="sdc-action">
-                <span class="sdc-btn-book">Agendar →</span>
+                <span style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)">Acesse pelo<br>nosso site</span>
             </div>
-        </a>`;
+        </div>`;
     } else {
         return `
-        <div class="slot-detail-card occupied" data-slot-id="${slot.id}">
-            <div class="sdc-color-bar" style="background:#94a3b8"></div>
+        <div class="slot-detail-card occupied">
+            <div class="sdc-color-bar"></div>
             <div class="sdc-body">
                 <div class="sdc-time">${time}</div>
                 <div class="sdc-type">${escHtml(slot.session_type_name)}</div>
-                <div class="sdc-meta">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    ${duration}
-                </div>
+                <div class="sdc-meta">⏱ ${duration}</div>
             </div>
             <div class="sdc-action">
                 <button class="sdc-btn-interest" onclick="openInterestModal(${slot.id})">Avise-me</button>

@@ -10,6 +10,41 @@ use App\Models\InterestModel;
 
 class BookingController extends BaseController
 {
+    /**
+     * Valida chave de acesso (?via=CHAVE) e armazena permissão na sessão por 2h.
+     * Retorna true se o visitante tem permissão para agendar.
+     */
+    private function checkBookingAccess(): bool
+    {
+        $configKey = env('booking.accessKey', '');
+
+        // Se não há chave configurada, acesso livre
+        if (empty($configKey)) {
+            return true;
+        }
+
+        $sess = session();
+
+        // Valida chave na URL e armazena na sessão por 2h
+        $viaKey = $this->request->getGet('via');
+        if ($viaKey && hash_equals($configKey, $viaKey)) {
+            $sess->set('booking_access', true);
+            $sess->set('booking_access_until', time() + 7200); // 2 horas
+        }
+
+        // Verifica sessão válida
+        if ($sess->get('booking_access') && $sess->get('booking_access_until') > time()) {
+            return true;
+        }
+
+        // Admin Shield também pode agendar
+        if (auth()->loggedIn()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function index(): string
     {
         $slotModel = new TimeSlotModel();
@@ -22,6 +57,8 @@ class BookingController extends BaseController
             $year  = (int) date('Y');
             $month = (int) date('m');
         }
+
+        $canBook = $this->checkBookingAccess();
 
         // Fetch ALL public slots (available + booked + held) for scarcity display
         $slots = $slotModel->getAllPublicByMonth($year, $month);
@@ -94,12 +131,13 @@ class BookingController extends BaseController
         return view('client/booking/index', [
             'title'      => 'Agende seu Ensaio — Studio MarcoSantoFoto',
             'calendar'   => $calendar,
-            'slots'      => $slots,        // all slots as JSON for JS interactivity
+            'slots'      => $slots,
             'year'       => $year,
             'month'      => $month,
             'monthName'  => $monthNames[$month],
             'prev'       => $prev,
             'next'       => $next,
+            'canBook'    => $canBook,
         ]);
     }
 
@@ -114,6 +152,11 @@ class BookingController extends BaseController
 
     public function book(int $slotId): string|\CodeIgniter\HTTP\RedirectResponse
     {
+        if (! $this->checkBookingAccess()) {
+            return redirect()->to('/')
+                ->with('warning', 'Para agendar, acesse a agenda pelo nosso site.');
+        }
+
         $slot = (new TimeSlotModel())->getWithType($slotId);
 
         if ($slot === null || $slot['status'] !== 'available') {
