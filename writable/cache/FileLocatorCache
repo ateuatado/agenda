@@ -1,0 +1,242 @@
+<?php return array (
+  'search' => 
+  array (
+    'Config/Services' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Services.php',
+          1 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/Services.php',
+          2 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/settings/src/Config/Services.php',
+          3 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Config/Services.php',
+        ),
+      ),
+    ),
+    'Config/Registrar.php' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/Registrar.php',
+        ),
+      ),
+    ),
+    'Helpers/kint_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Helpers/kint_helper.php',
+        ),
+      ),
+    ),
+    'Helpers/url_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Helpers/url_helper.php',
+        ),
+      ),
+    ),
+    'Helpers/auth_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Helpers/auth_helper.php',
+        ),
+      ),
+    ),
+    'Helpers/setting_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/settings/src/Helpers/setting_helper.php',
+        ),
+      ),
+    ),
+    'Helpers/filesystem_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Helpers/filesystem_helper.php',
+        ),
+      ),
+    ),
+    'Config/Events.php' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Events.php',
+        ),
+      ),
+    ),
+    'Config/Filters.php' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Filters.php',
+          1 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Config/Filters.php',
+        ),
+      ),
+    ),
+    'Config/AuthRoutes' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/AuthRoutes.php',
+        ),
+      ),
+    ),
+    'Helpers/array_helper' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Helpers/array_helper.php',
+        ),
+      ),
+    ),
+    'Config/Routes.php' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Routes.php',
+        ),
+      ),
+    ),
+    'Config/Factory' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Config/Factory.php',
+        ),
+      ),
+    ),
+    'Config/Settings' => 
+    array (
+      'php' => 
+      array (
+        1 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/settings/src/Config/Settings.php',
+        ),
+      ),
+    ),
+    'Language/en/Errors.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Language/en/Errors.php',
+        ),
+      ),
+    ),
+    'Language/en/HTTP.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Language/en/HTTP.php',
+        ),
+      ),
+    ),
+    'Language/en/Auth.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Language/en/Auth.php',
+        ),
+      ),
+    ),
+    'Language/en/Security.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Language/en/Security.php',
+        ),
+      ),
+    ),
+    'Language/en/Email.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Language/en/Email.php',
+        ),
+      ),
+    ),
+    'Language/en/Validation.php' => 
+    array (
+      'php' => 
+      array (
+        0 => 
+        array (
+          0 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Language/en/Validation.php',
+          1 => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Language/en/Validation.php',
+        ),
+      ),
+    ),
+  ),
+  'findQualifiedNameFromPath' => 
+  array (
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Services.php' => 'Config\\Services',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/Services.php' => 'CodeIgniter\\Shield\\Config\\Services',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/settings/src/Config/Services.php' => 'CodeIgniter\\Settings\\Config\\Services',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/Registrar.php' => 'CodeIgniter\\Shield\\Config\\Registrar',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/shield/src/Config/AuthRoutes.php' => 'CodeIgniter\\Shield\\Config\\AuthRoutes',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Config/Factory.php' => 'CodeIgniter\\Config\\Factory',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/settings/src/Config/Settings.php' => 'CodeIgniter\\Settings\\Config\\Settings',
+  ),
+  'getClassname' => 
+  array (
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/app/Config/Filters.php' => 'Config\\Filters',
+    '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/codeigniter4/framework/system/Config/Filters.php' => 'CodeIgniter\\Config\\Filters',
+  ),
+  'locateFile' => 
+  array (
+    '\\CodeIgniter\\Shield\\Views\\login.php' => 
+    array (
+      'Views' => 
+      array (
+        'php' => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/composer/../codeigniter4/shield/src/Views/login.php',
+      ),
+    ),
+    '\\CodeIgniter\\Shield\\Views\\layout.php' => 
+    array (
+      'Views' => 
+      array (
+        'php' => '/home/marcosantofoto-agenda/htdocs/agenda.marcosantofoto.com.br/vendor/composer/../codeigniter4/shield/src/Views/layout.php',
+      ),
+    ),
+  ),
+);
