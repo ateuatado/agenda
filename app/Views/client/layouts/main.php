@@ -567,6 +567,11 @@
 <footer class="site-footer">
     <span class="footer-brand">Studio MarcoSantoFoto</span>
     <span class="footer-copy">© <?= date('Y') ?> — Todos os direitos reservados</span>
+    <?php if (auth()->loggedIn()): ?>
+        <a href="<?= base_url('admin/') ?>" style="font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#2a2a2a;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#2a2a2a'">Admin</a>
+    <?php else: ?>
+        <a href="<?= base_url('login') ?>" style="font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#1a1a1a;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#2a2a2a'" onmouseout="this.style.color='#1a1a1a'" title="Área restrita">·</a>
+    <?php endif; ?>
 </footer>
 
 <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
