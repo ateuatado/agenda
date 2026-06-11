@@ -108,3 +108,11 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api', 'filter' => 'cor
         $routes->get('customers',           'CustomerController::index',   ['as' => 'api.admin.customers']);
     });
 });
+
+// -------------------------------------------------------------------------
+// WIDGET — HTML fragments para embed cross-origin
+// -------------------------------------------------------------------------
+$routes->group('widget', ['namespace' => 'App\Controllers\Widget'], static function ($routes) {
+    $routes->get('calendar', 'CalendarController::index', ['as' => 'widget.calendar']);
+    $routes->options('calendar', function() { return service('response')->setStatusCode(204); });
+});

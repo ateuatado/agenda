@@ -16,12 +16,90 @@ class BookingController extends BaseController
         $year  = (int) ($this->request->getGet('year')  ?? date('Y'));
         $month = (int) ($this->request->getGet('month') ?? date('m'));
 
-        // Fetch ALL slots (available + booked + held) so client can see scarcity
+        // Clamp: don't show past months
+        $now = date('Y-m');
+        if (sprintf('%04d-%02d', $year, $month) < $now) {
+            $year  = (int) date('Y');
+            $month = (int) date('m');
+        }
+
+        // Fetch ALL public slots (available + booked + held) for scarcity display
+        $slots = $slotModel->getAllPublicByMonth($year, $month);
+
+        // Group slots by date
+        $slotsByDate = [];
+        foreach ($slots as $slot) {
+            $slotsByDate[$slot['date']][] = $slot;
+        }
+
+        // Build calendar matrix: array of weeks → 7 cells each
+        $firstDayTs  = mktime(0, 0, 0, $month, 1, $year);
+        $daysInMonth = (int) date('t', $firstDayTs);
+        $startDow    = (int) date('w', $firstDayTs); // 0=Sun, 6=Sat
+        $today       = date('Y-m-d');
+
+        $calendar = [];
+        $day      = 1;
+
+        for ($week = 0; $week < 6; $week++) {
+            $weekData = [];
+            for ($dow = 0; $dow < 7; $dow++) {
+                $cellIndex = $week * 7 + $dow;
+                if ($cellIndex < $startDow || $day > $daysInMonth) {
+                    $weekData[] = null; // empty padding cell
+                } else {
+                    $dateStr  = sprintf('%04d-%02d-%02d', $year, $month, $day);
+                    $daySlots = $slotsByDate[$dateStr] ?? [];
+                    $available = count(array_filter($daySlots, fn($s) => $s['status'] === 'available'));
+
+                    $weekData[] = [
+                        'day'       => $day,
+                        'date'      => $dateStr,
+                        'slots'     => $daySlots,
+                        'available' => $available,
+                        'total'     => count($daySlots),
+                        'isToday'   => $dateStr === $today,
+                        'isPast'    => $dateStr < $today,
+                    ];
+                    $day++;
+                }
+            }
+            $calendar[] = $weekData;
+            if ($day > $daysInMonth) {
+                break;
+            }
+        }
+
+        // Previous / next month navigation
+        $prev = $month === 1
+            ? ['year' => $year - 1, 'month' => 12]
+            : ['year' => $year,     'month' => $month - 1];
+        $next = $month === 12
+            ? ['year' => $year + 1, 'month' => 1]
+            : ['year' => $year,     'month' => $month + 1];
+
+        // Don't allow navigating to past months
+        $nowYM = date('Y') * 12 + date('m');
+        $prevYM = $prev['year'] * 12 + $prev['month'];
+        if ($prevYM < $nowYM) {
+            $prev = null;
+        }
+
+        $monthNames = [
+            1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março',    4 => 'Abril',
+            5 => 'Maio',    6 => 'Junho',      7 => 'Julho',    8 => 'Agosto',
+            9 => 'Setembro',10 => 'Outubro',  11 => 'Novembro',12 => 'Dezembro',
+        ];
+
         return view('client/booking/index', [
-            'title'  => 'Agende seu Ensaio — Studio MarcoSantoFoto',
-            'slots'  => $slotModel->getAllPublicByMonth($year, $month),
-            'year'   => $year,
-            'month'  => $month,
+            'title'      => 'Agende seu Ensaio — Studio MarcoSantoFoto',
+            'calendar'   => $calendar,
+            'slots'      => $slots,        // all slots as JSON for JS interactivity
+            'year'       => $year,
+            'month'      => $month,
+            'monthName'  => $monthNames[$month],
+            'prev'       => $prev,
+            'next'       => $next,
         ]);
     }
 
@@ -59,7 +137,6 @@ class BookingController extends BaseController
 
         $customerData = $this->request->getPost(['name', 'email', 'phone', 'notes']);
 
-        // Validate
         $rules = [
             'name'  => 'required|min_length[2]',
             'email' => 'required|valid_email',
@@ -70,7 +147,6 @@ class BookingController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Find or create customer
         $customerModel = new CustomerModel();
         $customer = $customerModel->findOrCreate([
             'name'  => $customerData['name'],
@@ -78,13 +154,12 @@ class BookingController extends BaseController
             'phone' => $customerData['phone'],
         ]);
 
-        // Update name/phone if customer already existed
+        // Update name/phone in case customer already existed with different data
         $customerModel->update($customer['id'], [
             'name'  => $customerData['name'],
             'phone' => $customerData['phone'],
         ]);
 
-        // Create booking
         $bookingModel = new BookingModel();
         $bookingModel->insert([
             'time_slot_id' => $slotId,
@@ -94,13 +169,8 @@ class BookingController extends BaseController
             'booked_at'    => date('Y-m-d H:i:s'),
         ]);
 
-        // Mark slot as booked
         $slotModel->update($slotId, ['status' => 'booked']);
-
-        // Send confirmation email
         $this->sendConfirmationEmail($customer, $slot);
-
-        // Auto-login customer in session
         session()->set('customer_id', $customer['id']);
 
         return redirect()->to('/minha-agenda')->with('success', '✅ Agendamento confirmado! Verifique seu e-mail.');
@@ -108,8 +178,8 @@ class BookingController extends BaseController
 
     public function myBookings(): string
     {
-        $customerId   = session()->get('customer_id');
-        $bookingModel = new BookingModel();
+        $customerId    = session()->get('customer_id');
+        $bookingModel  = new BookingModel();
         $interestModel = new InterestModel();
 
         return view('client/booking/my_bookings', [
@@ -133,15 +203,15 @@ class BookingController extends BaseController
 
     public function interest(int $slotId): \CodeIgniter\HTTP\RedirectResponse
     {
-        $slotModel     = new TimeSlotModel();
-        $slot          = $slotModel->find($slotId);
+        $slotModel = new TimeSlotModel();
+        $slot      = $slotModel->find($slotId);
 
         if ($slot === null) {
             return redirect()->back()->with('error', 'Slot não encontrado.');
         }
 
-        $post     = $this->request->getPost(['name', 'email', 'phone']);
-        $rules    = ['name' => 'required', 'email' => 'required|valid_email'];
+        $post  = $this->request->getPost(['name', 'email', 'phone']);
+        $rules = ['name' => 'required', 'email' => 'required|valid_email'];
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -162,12 +232,10 @@ class BookingController extends BaseController
             ]);
         }
 
-        // If slot is still available but we're marking interest, update status
-        if ($slot['status'] === 'available') {
-            $slotModel->update($slotId, ['status' => 'interested']);
-        }
+        // Bug fix: DO NOT change slot status to 'interested' — that value is not in the enum.
+        // The slot remains 'available' (or 'booked') and the interest is tracked in the interests table.
 
-        return redirect()->back()->with('success', 'Interesse registrado! Avisaremos se o horário abrir vaga.');
+        return redirect()->back()->with('success', 'Interesse registrado! Avisaremos quando este horário abrir vaga.');
     }
 
     private function sendConfirmationEmail(array $customer, array $slot): void

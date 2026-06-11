@@ -1,0 +1,232 @@
+/*
+ * Agenda Widget CSS — prefixo aw-
+ * CSS self-contained para o widget HTML embeddable.
+ * Não conflita com o CSS do site host.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.aw-root {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1e293b;
+    box-sizing: border-box;
+}
+.aw-root *, .aw-root *::before, .aw-root *::after { box-sizing: inherit; }
+
+/* Dark theme */
+.aw-root[data-theme="dark"] {
+    --aw-bg:       #0f172a;
+    --aw-card:     #1e293b;
+    --aw-border:   #334155;
+    --aw-text:     #e2e8f0;
+    --aw-muted:    #64748b;
+    --aw-primary:  #818cf8;
+    --aw-avail:    #34d399;
+    --aw-full:     #475569;
+}
+
+/* Light theme (default) */
+.aw-root, .aw-root[data-theme="light"] {
+    --aw-bg:       #f8fafc;
+    --aw-card:     #ffffff;
+    --aw-border:   #e2e8f0;
+    --aw-text:     #1e293b;
+    --aw-muted:    #94a3b8;
+    --aw-primary:  #6366f1;
+    --aw-avail:    #10b981;
+    --aw-full:     #94a3b8;
+}
+
+/* ---- Navigation ---------------------------------------- */
+.aw-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 2px;
+}
+
+.aw-nav-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--aw-border);
+    background: var(--aw-card);
+    color: var(--aw-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background .15s, border-color .15s;
+}
+.aw-nav-btn:hover { background: var(--aw-primary); border-color: var(--aw-primary); color: #fff; }
+.aw-nav-btn.aw-disabled { opacity: .3; pointer-events: none; }
+
+.aw-month-label { text-align: center; }
+.aw-month-name { font-size: 15px; font-weight: 700; color: var(--aw-text); display: block; }
+.aw-year       { font-size: 11px; color: var(--aw-muted); }
+
+/* ---- Scarcity banner ----------------------------------- */
+.aw-scarcity {
+    background: rgba(245, 158, 11, .1);
+    color: #92400e;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* ---- Grid header --------------------------------------- */
+.aw-grid-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 3px;
+}
+.aw-grid-header span {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--aw-muted);
+    padding: 3px 0;
+}
+
+/* ---- Grid ------------------------------------------------ */
+.aw-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.aw-cell {
+    background: var(--aw-card);
+    border: 1.5px solid var(--aw-border);
+    border-radius: 8px;
+    min-height: 60px;
+    padding: 5px 4px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+    transition: border-color .15s, box-shadow .15s, transform .12s;
+    position: relative;
+}
+.aw-cell.aw-has-slots { cursor: pointer; }
+.aw-cell.aw-full      { cursor: pointer; }
+.aw-cell.aw-has-slots:hover {
+    border-color: var(--aw-primary);
+    box-shadow: 0 3px 12px rgba(99,102,241,.18);
+    transform: translateY(-2px);
+}
+.aw-cell.aw-full:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+.aw-cell.aw-selected {
+    border-color: var(--aw-primary) !important;
+    box-shadow: 0 0 0 2px rgba(99,102,241,.2);
+}
+.aw-cell.aw-empty { background: transparent; border-color: transparent; }
+.aw-cell.aw-past  { opacity: .45; cursor: default !important; }
+.aw-cell.aw-today { border-color: var(--aw-primary) !important; }
+.aw-cell.aw-today .aw-day-num { color: var(--aw-primary); font-weight: 800; }
+
+.aw-day-num { font-size: 12px; font-weight: 700; color: var(--aw-text); line-height: 1; }
+.aw-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+.aw-dot-avail { background: var(--aw-avail); }
+.aw-dot-full  { background: var(--aw-full); }
+.aw-scarce    { font-size: 9px; font-weight: 700; color: #dc2626; margin-top: 2px; }
+.aw-today-label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--aw-primary); margin-top: auto; }
+
+/* ---- Detail panel -------------------------------------- */
+.aw-detail {
+    margin-top: 12px;
+    border: 1.5px solid var(--aw-border);
+    border-radius: 10px;
+    padding: 12px;
+    background: var(--aw-card);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity .22s ease, transform .22s ease;
+}
+.aw-detail.aw-visible { opacity: 1; transform: translateY(0); }
+.aw-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--aw-border);
+}
+.aw-detail-date { font-size: 13px; font-weight: 700; color: var(--aw-text); }
+.aw-close-btn {
+    border: none;
+    background: transparent;
+    color: var(--aw-muted);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px 6px;
+}
+.aw-detail-slots { display: flex; flex-direction: column; gap: 6px; }
+.aw-empty-msg { font-size: 12px; color: var(--aw-muted); text-align: center; padding: 8px; }
+
+/* ---- Slot cards ---------------------------------------- */
+.aw-slot-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--aw-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: var(--aw-text);
+    transition: border-color .15s, box-shadow .15s;
+    font-size: 12px;
+}
+.aw-slot-card.aw-slot-avail:hover {
+    border-color: var(--aw-primary);
+    box-shadow: 0 3px 10px rgba(99,102,241,.12);
+}
+.aw-slot-card.aw-slot-full { opacity: .65; }
+.aw-slot-bar { width: 3px; align-self: stretch; border-radius: 3px; flex-shrink: 0; }
+.aw-slot-time { font-size: 15px; font-weight: 800; min-width: 38px; }
+.aw-slot-info { flex: 1; }
+.aw-slot-type { font-weight: 600; }
+.aw-slot-dur  { font-size: 11px; color: var(--aw-muted); }
+.aw-slot-cta {
+    background: var(--aw-primary);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.aw-slot-status {
+    font-size: 11px;
+    color: var(--aw-muted);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---- Legend -------------------------------------------- */
+.aw-legend {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--aw-muted);
+}
+.aw-legend span { display: flex; align-items: center; gap: 5px; }

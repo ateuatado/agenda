@@ -23,6 +23,19 @@ class BookingModel extends Model
     ];
 
     /**
+     * Get a single booking by ID with full slot/customer/type details.
+     */
+    public function getById(int $id): ?array
+    {
+        return $this->select('bookings.*, time_slots.date, time_slots.start_time, time_slots.end_time, session_types.name as session_type_name, customers.name as customer_name, customers.email as customer_email, customers.phone as customer_phone')
+                    ->join('time_slots', 'time_slots.id = bookings.time_slot_id')
+                    ->join('session_types', 'session_types.id = time_slots.session_type_id')
+                    ->join('customers', 'customers.id = bookings.customer_id')
+                    ->where('bookings.id', $id)
+                    ->first();
+    }
+
+    /**
      * Get all bookings with slot and customer info.
      */
     public function getWithDetails(?string $status = null): array

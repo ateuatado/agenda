@@ -27,16 +27,8 @@ class BookingController extends BaseAdminController
 
     public function show(int $id): string|\CodeIgniter\HTTP\RedirectResponse
     {
-        $booking = $this->model->getWithDetails()[0] ?? null;
-        // Get specific booking with details
-        $bookings = $this->model->getWithDetails();
-        $booking  = null;
-        foreach ($bookings as $b) {
-            if ((int) $b['id'] === $id) {
-                $booking = $b;
-                break;
-            }
-        }
+        // Bug fix: query directly by ID instead of loading all bookings
+        $booking = $this->model->getById($id);
 
         if ($booking === null) {
             return redirect()->to(route_to('admin.bookings'))->with('error', 'Agendamento não encontrado.');
