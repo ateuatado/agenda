@@ -5,4 +5,3 @@
 /writable/debugbar/
 /writable/uploads/
 .env
-*.lock
