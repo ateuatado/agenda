@@ -85,6 +85,10 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api', 'filter' => 'cor
     $routes->post('book',                   'BookingController::book',         ['as' => 'api.book']);
     $routes->post('interest',               'InterestController::store',       ['as' => 'api.interest']);
 
+    // Token de agendamento — chamado pelo Hero após pagamento
+    $routes->post('access-tokens',          'AccessTokenController::create',   ['as' => 'api.access_tokens.create']);
+    $routes->get('access-tokens/(:segment)','AccessTokenController::show/$1',  ['as' => 'api.access_tokens.show']);
+
     // Customer auth (magic link)
     $routes->post('auth/request-access',    'AuthController::requestAccess',  ['as' => 'api.auth.request']);
     $routes->post('auth/verify',            'AuthController::verify',          ['as' => 'api.auth.verify']);

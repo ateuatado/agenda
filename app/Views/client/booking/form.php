@@ -36,18 +36,18 @@
             <div class="mb-3">
                 <label class="form-label">Nome completo <span class="text-danger">*</span></label>
                 <input type="text" name="name" class="form-control" required placeholder="Seu nome"
-                    value="<?= old('name') ?>">
+                    value="<?= old('name', esc(session()->get('prefill_name') ?? '')) ?>">
             </div>
             <div class="mb-3">
                 <label class="form-label">E-mail <span class="text-danger">*</span></label>
                 <input type="email" name="email" class="form-control" required placeholder="seu@email.com"
-                    value="<?= old('email') ?>">
+                    value="<?= old('email', esc(session()->get('prefill_email') ?? '')) ?>">
                 <div class="form-text">Enviaremos a confirmação para este e-mail.</div>
             </div>
             <div class="mb-3">
                 <label class="form-label">WhatsApp / Telefone <span class="text-danger">*</span></label>
                 <input type="tel" name="phone" class="form-control" required placeholder="(11) 99999-9999"
-                    value="<?= old('phone') ?>">
+                    value="<?= old('phone', esc(session()->get('prefill_phone') ?? '')) ?>">
             </div>
             <div class="mb-4">
                 <label class="form-label">Observações <span class="text-muted">(opcional)</span></label>

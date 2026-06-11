@@ -11,34 +11,39 @@ use App\Models\InterestModel;
 class BookingController extends BaseController
 {
     /**
-     * Valida chave de acesso (?via=CHAVE) e armazena permissão na sessão por 2h.
-     * Retorna true se o visitante tem permissão para agendar.
+     * Valida token único de agendamento (?token=XYZ) gerado pelo hero após pagamento.
+     * Armazena permissão + dados do cliente na sessão.
      */
     private function checkBookingAccess(): bool
     {
-        $configKey = env('booking.accessKey', '');
-
-        // Se não há chave configurada, acesso livre
-        if (empty($configKey)) {
-            return true;
-        }
-
         $sess = session();
 
-        // Valida chave na URL e armazena na sessão por 2h
-        $viaKey = $this->request->getGet('via');
-        if ($viaKey && hash_equals($configKey, $viaKey)) {
-            $sess->set('booking_access', true);
-            $sess->set('booking_access_until', time() + 7200); // 2 horas
-        }
-
-        // Verifica sessão válida
-        if ($sess->get('booking_access') && $sess->get('booking_access_until') > time()) {
+        // Admin Shield sempre pode agendar
+        if (auth()->loggedIn()) {
             return true;
         }
 
-        // Admin Shield também pode agendar
-        if (auth()->loggedIn()) {
+        // Verifica se chegou um token na URL
+        $rawToken = $this->request->getGet('token');
+        if ($rawToken) {
+            $model  = new \App\Models\BookingTokenModel();
+            $record = $model->findValid($rawToken);
+
+            if ($record) {
+                // Armazena permissão e dados do cliente para pré-preenchimento
+                $sess->set([
+                    'booking_access'        => true,
+                    'booking_access_until'  => strtotime($record['expires_at']),
+                    'booking_token_id'      => $record['id'],
+                    'prefill_name'          => $record['customer_name'],
+                    'prefill_email'         => $record['customer_email'],
+                    'prefill_phone'         => $record['customer_phone'] ?? '',
+                ]);
+            }
+        }
+
+        // Verifica sessão ainda válida
+        if ($sess->get('booking_access') && $sess->get('booking_access_until') > time()) {
             return true;
         }
 
