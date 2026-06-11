@@ -430,7 +430,7 @@
         transition: border-color .2s, color .2s;
     }
     .cal-detail-close:hover { border-color: var(--gold); color: var(--gold); }
-    .cal-detail-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); }
+    .cal-detail-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--border); }
     .detail-empty { color: var(--text-muted); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: 2rem; text-align: center; grid-column: 1/-1; background: var(--bg-card); }
 
     /* ── Slot cards no detalhe ── */
