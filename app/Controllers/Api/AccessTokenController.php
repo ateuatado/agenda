@@ -34,14 +34,14 @@ class AccessTokenController extends BaseApiController
         // ── Autenticação por API Key ───────────────────────────────────────
         $configKey = env('booking.apiKey', '');
         if (empty($configKey)) {
-            return $this->failServerError('API key não configurada no servidor.');
+            return $this->error('API key não configurada no servidor.', 500);
         }
 
         $authHeader = $this->request->getHeaderLine('Authorization');
         $provided   = str_starts_with($authHeader, 'Bearer ') ? substr($authHeader, 7) : '';
 
         if (! hash_equals($configKey, $provided)) {
-            return $this->failUnauthorized('API key inválida.');
+            return $this->error('API key inválida.', 401);
         }
 
         // ── Validação do body ─────────────────────────────────────────────
@@ -56,7 +56,7 @@ class AccessTokenController extends BaseApiController
         ];
 
         if (! $this->validateData($data, $rules)) {
-            return $this->failValidationErrors($this->validator->getErrors());
+            return $this->error('Dados inválidos.', 422, $this->validator->getErrors());
         }
 
         // ── Geração do token ──────────────────────────────────────────────
@@ -65,13 +65,13 @@ class AccessTokenController extends BaseApiController
         $record     = $model->generate($data, $expireDays);
 
         // ── Resposta ──────────────────────────────────────────────────────
-        return $this->respondCreated([
+        return $this->json([
             'success'    => true,
             'token'      => $record['token'],
             'link'       => base_url('/?token=' . $record['token']),
             'expires_at' => $record['expires_at'],
             'order_id'   => $record['order_id'],
-        ]);
+        ], 201);
     }
 
     /**
@@ -82,24 +82,24 @@ class AccessTokenController extends BaseApiController
     public function show(string $token): ResponseInterface
     {
         // Mesma autenticação
-        $configKey = env('booking.apiKey', '');
+        $configKey  = env('booking.apiKey', '');
         $authHeader = $this->request->getHeaderLine('Authorization');
         $provided   = str_starts_with($authHeader, 'Bearer ') ? substr($authHeader, 7) : '';
 
         if (empty($configKey) || ! hash_equals($configKey, $provided)) {
-            return $this->failUnauthorized('API key inválida.');
+            return $this->error('API key inválida.', 401);
         }
 
         $model  = new BookingTokenModel();
         $record = $model->where('token', $token)->first();
 
         if (! $record) {
-            return $this->failNotFound('Token não encontrado.');
+            return $this->error('Token não encontrado.', 404);
         }
 
         $isValid = strtotime($record['expires_at']) > time();
 
-        return $this->respond([
+        return $this->json([
             'token'      => $record['token'],
             'order_id'   => $record['order_id'],
             'valid'      => $isValid,
