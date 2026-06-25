@@ -49,7 +49,13 @@ class BookingController extends BaseApiController
 
         $slotModel->update($slot['id'], ['status' => 'booked']);
 
-        return $this->success(['booking_id' => $bookingModel->getInsertID()], 'Agendamento confirmado!', 201);
+        return $this->success([
+            'booking_id'   => $bookingModel->getInsertID(),
+            'scheduled_at' => $slot['date'] . ' ' . $slot['start_time'],
+            'date'         => $slot['date'],
+            'start_time'   => $slot['start_time'],
+            'end_time'     => $slot['end_time'],
+        ], 'Agendamento confirmado!', 201);
     }
 
     public function myBookings(): \CodeIgniter\HTTP\ResponseInterface
